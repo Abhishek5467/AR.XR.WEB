@@ -1,0 +1,90 @@
+/* ===== RESET ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* ===== BODY ===== */
+body {
+    background: #0f172a; /* dark blue */
+    color: #e2e8f0;
+    text-align: center;
+    padding: 20px;
+}
+
+/* ===== TITLE ===== */
+h2 {
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+/* ===== VIDEO ===== */
+video {
+    width: 640px;
+    height: 480px;
+    background: black;
+    border-radius: 10px;
+    border: 2px solid #334155;
+}
+
+/* ===== INFO PANEL ===== */
+#info {
+    text-align: left;
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
+    min-width: 250px;
+    border: 1px solid #334155;
+}
+
+#info p {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+/* ===== VALUES ===== */
+#valve {
+    color: #22c55e; /* green */
+    font-weight: bold;
+}
+
+#warnings {
+    color: #ef4444; /* red */
+    font-weight: bold;
+}
+
+#multi {
+    color: #facc15; /* yellow */
+    font-weight: bold;
+}
+
+/* ===== BUTTON ===== */
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+button:hover {
+    background: #2563eb;
+}
+
+button:active {
+    transform: scale(0.98);
+}

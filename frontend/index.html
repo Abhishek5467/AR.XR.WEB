@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Heart Valve Monitor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>Heart Valve Monitor (WebRTC)</h2>
+
+<div class="container">
+    <video id="video" autoplay playsinline></video>
+
+    <div id="info">
+        <p><strong>Valve:</strong> <span id="valve">None</span></p>
+        <p><strong>Warnings:</strong> <span id="warnings">None</span></p>
+        <p><strong>Multi Person:</strong> <span id="multi">False</span></p>
+    </div>
+</div>
+
+<button id="startBtn">Start Camera</button>
+
+<script type="module" src="app.js"></script>
+
+</body>
+</html>
