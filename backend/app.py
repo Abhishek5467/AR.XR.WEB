@@ -1,23 +1,21 @@
-import asyncio
-from flask import Flask, request, jsonify
+from quart import Quart, request, jsonify
+from quart_cors import cors
 from aiortc import RTCPeerConnection, RTCSessionDescription
 
 from webrtc import VideoProcessorTrack
 from state import state
 
 
+app = Quart(__name__)
+app = cors(app, allow_origin="*")
 
-app = Flask(__name__)
 pcs = set()
-
-from flask_cors import CORS
-CORS(app)
 
 
 # ================= WEBRTC =================
 @app.route("/offer", methods=["POST"])
 async def offer():
-    params = request.get_json()
+    params = await request.get_json()  # ← must await in Quart
 
     pc = RTCPeerConnection()
     pcs.add(pc)
@@ -50,18 +48,18 @@ async def offer():
 
     return jsonify({
         "sdp": pc.localDescription.sdp,
-        "type": pc.localDescription.type    
+        "type": pc.localDescription.type
     })
 
 
 # ================= API =================
 @app.route("/status")
-def status():
+async def status():
     return jsonify(state.get_metadata())
 
 
 @app.route("/record/<valve>", methods=["POST"])
-def record(valve):
+async def record(valve):
     state.request_record(valve)
     return jsonify({"status": "ok"})
 

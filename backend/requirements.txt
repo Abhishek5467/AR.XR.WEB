@@ -1,0 +1,12 @@
+numpy
+ultralytics
+# Flask-Async
+# flask[async]
+mediapipe==0.10.13
+opencv-python
+aiortc
+av
+# flask-cors
+# webrtc
+quart 
+quart-cors

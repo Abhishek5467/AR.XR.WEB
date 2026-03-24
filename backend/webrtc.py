@@ -23,6 +23,7 @@ class VideoProcessorTrack(VideoStreamTrack):
 
         # 1. Receive frame from browser
         frame = await self.track.recv()
+        # print("Frame Received")
 
         # 2. Convert to numpy (OpenCV format)
         img = frame.to_ndarray(format="bgr24")
