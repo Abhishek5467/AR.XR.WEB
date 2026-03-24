@@ -1,0 +1,7 @@
+numpy
+ultralytics
+Flask-Async
+mediapipe
+opencv-python
+aiortc
+webrtc
