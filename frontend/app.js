@@ -1,5 +1,6 @@
 let pc = null;
 let isStarted = false;
+let pollingInterval = null;
 
 // ================= START WEBRTC =================
 export async function startWebRTC() {
@@ -44,8 +45,8 @@ export async function startWebRTC() {
 	const offer = await pc.createOffer();
 	await pc.setLocalDescription(offer);
 
-	// send to backend
-	const res = await fetch('http://localhost:5000/offer', {
+	// send to backend via Vercel rewrite
+	const res = await fetch('/api/offer', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -74,6 +75,11 @@ export function stopWebRTC() {
 	pc = null;
 	isStarted = false;
 
+	if (pollingInterval) {
+		clearInterval(pollingInterval);
+		pollingInterval = null;
+	}
+
 	document.getElementById('video').srcObject = null;
 
 	console.log('WebRTC stopped');
@@ -81,9 +87,11 @@ export function stopWebRTC() {
 
 // ================= STATUS POLLING =================
 export function startPolling() {
-	setInterval(async () => {
+	if (pollingInterval) return;
+
+	pollingInterval = setInterval(async () => {
 		try {
-			const res = await fetch('http://localhost:5000/status');
+			const res = await fetch('/api/status');
 			const data = await res.json();
 			console.log(data);
 
@@ -102,7 +110,10 @@ function updateUI(data) {
 
 	valveEl.innerText = data.valve || 'None';
 
-	warningsEl.innerText = data.warnings && data.warnings.length ? data.warnings.join(', ') : 'None';
+	warningsEl.innerText =
+		data.warnings && data.warnings.length
+			? data.warnings.join(', ')
+			: 'None';
 
 	multiEl.innerText = data.multi_person ? 'True' : 'False';
 }
@@ -110,7 +121,7 @@ function updateUI(data) {
 // ================= RECORD =================
 export async function recordValve(valve) {
 	try {
-		await fetch(`http://localhost:5000/record/${valve}`, {
+		await fetch(`/api/record/${valve}`, {
 			method: 'POST',
 		});
 
