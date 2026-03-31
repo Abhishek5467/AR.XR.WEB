@@ -16,29 +16,39 @@ class VideoProcessorTrack(VideoStreamTrack):
         # Each connection gets its own processor instance
         self.processor = Processor()
 
-    async def recv(self):
-        """
-        This is called for EVERY frame (critical path)
-        """
+   async def recv(self):
+    frame = await self.track.recv()
 
-        # 1. Receive frame from browser
-        frame = await self.track.recv()
-        # print("Frame Received")
+    img = frame.to_ndarray(format="bgr24")
 
-        # 2. Convert to numpy (OpenCV format)
-        img = frame.to_ndarray(format="bgr24")
-
-        # 3. Process using your pipeline
+    try:
         processed_frame, metadata = self.processor.process(img)
 
-        # (optional) attach metadata later via data channel
-        # for now we ignore it here
+        # fallback if processing fails or returns invalid output
+        if processed_frame is None:
+            print("processed_frame is None, using original frame")
+            processed_frame = img
+
+        if len(processed_frame.shape) != 3:
+            print("Invalid frame shape, using original frame:", processed_frame.shape)
+            processed_frame = img
+
+        if processed_frame.shape[2] != 3:
+            print("Invalid channel count, using original frame:", processed_frame.shape)
+            processed_frame = img
+
+        if processed_frame.dtype != img.dtype:
+            print("Invalid dtype, converting:", processed_frame.dtype)
+            processed_frame = processed_frame.astype(img.dtype)
+
         state.update_metadata(metadata)
-        # 4. Convert back to WebRTC frame
-        new_frame = av.VideoFrame.from_ndarray(processed_frame, format="bgr24")
 
-        # Preserve timing (VERY IMPORTANT)
-        new_frame.pts = frame.pts
-        new_frame.time_base = frame.time_base
+    except Exception as e:
+        print("Processor error:", e)
+        processed_frame = img
 
-        return new_frame
+    new_frame = av.VideoFrame.from_ndarray(processed_frame, format="bgr24")
+    new_frame.pts = frame.pts
+    new_frame.time_base = frame.time_base
+
+    return new_frame
