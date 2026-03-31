@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://ar-xr-web-1.onrender.com"
+      "destination": "https://ar-xr-web.onrender.com/:path*"
     }
   ]
 }
